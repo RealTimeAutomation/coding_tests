@@ -38,6 +38,36 @@ LOG_LEVEL=DEBUG ./main
 LOG_LEVEL=INFO ./main
 ```
 
+### Analysis Tools
+
+**Valgrind (Memory Leak Detection):**
+```bash
+cd refactor/_student
+make valgrind
+# Output: build/valgrind_output.txt
+```
+
+**cppcheck (Static Analysis):**
+```bash
+cd refactor/_student
+make cppcheck
+# Output: build/cppcheck_report.xml, build/cppcheck_report.txt
+```
+
+**AddressSanitizer (Runtime Memory Error Detection):**
+```bash
+cd refactor/_student
+make sanitize
+# Output: build/sanitizer_output.txt
+```
+
+**Code Coverage:**
+```bash
+cd refactor/_student
+make coverage
+# Output: build/*.gcov files, build/coverage_html/ (if lcov installed)
+```
+
 ---
 
 ## Teacher Commands - Test Student Code
@@ -168,5 +198,11 @@ cd refactor/_teacher && make final
 
 # Teacher - test answer key only
 cd refactor/_teacher/answer_key && make test-all
+
+# Teacher - analysis tools
+cd refactor/_teacher && make valgrind    # Memory leak detection
+cd refactor/_teacher && make cppcheck    # Static analysis
+cd refactor/_teacher && make sanitize    # AddressSanitizer
+cd refactor/_teacher && make coverage    # Code coverage
 ```
 

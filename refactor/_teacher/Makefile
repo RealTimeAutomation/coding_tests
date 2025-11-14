@@ -109,8 +109,132 @@ final: build
 	@echo "  - _student/build/test_results.md (initial tests)"
 	@echo "  - _student/build/test_results_final.md (final tests)"
 
+valgrind-student: build
+	@echo "Running student tests with Valgrind..."
+	@if ! command -v valgrind >/dev/null 2>&1; then \
+		echo "❌ Valgrind not found. Install with: sudo apt-get install valgrind"; \
+		exit 1; \
+	fi
+	@cd ../_student/build && valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 ./run_tests 2>&1 | tee valgrind_student.txt || true
+	@echo "Valgrind output: ../_student/build/valgrind_student.txt"
+
+valgrind-answer-key:
+	@echo "Running answer key tests with Valgrind..."
+	@if ! command -v valgrind >/dev/null 2>&1; then \
+		echo "❌ Valgrind not found. Install with: sudo apt-get install valgrind"; \
+		exit 1; \
+	fi
+	@cd answer_key && $(MAKE) build >/dev/null 2>&1
+	@cd answer_key/build && valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 ./run_tests 2>&1 | tee valgrind_answer_key.txt || true
+	@echo "Valgrind output: answer_key/build/valgrind_answer_key.txt"
+
+valgrind: valgrind-student valgrind-answer-key
+	@echo ""
+	@echo "✅ Valgrind analysis complete for both solutions"
+
+cppcheck-student:
+	@echo "Running cppcheck on student code..."
+	@if ! command -v cppcheck >/dev/null 2>&1; then \
+		echo "❌ cppcheck not found. Install with: sudo apt-get install cppcheck"; \
+		exit 1; \
+	fi
+	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
+		--xml --xml-version=2 ../_student/src/legacy/*.c ../_student/src/*.c 2> cppcheck_student.xml || true
+	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
+		../_student/src/legacy/*.c ../_student/src/*.c 2>&1 | tee cppcheck_student.txt || true
+	@echo "cppcheck reports: cppcheck_student.xml, cppcheck_student.txt"
+
+cppcheck-answer-key:
+	@echo "Running cppcheck on answer key code..."
+	@if ! command -v cppcheck >/dev/null 2>&1; then \
+		echo "❌ cppcheck not found. Install with: sudo apt-get install cppcheck"; \
+		exit 1; \
+	fi
+	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
+		--xml --xml-version=2 answer_key/src/legacy/*.c answer_key/src/*.c 2> cppcheck_answer_key.xml || true
+	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
+		answer_key/src/legacy/*.c answer_key/src/*.c 2>&1 | tee cppcheck_answer_key.txt || true
+	@echo "cppcheck reports: cppcheck_answer_key.xml, cppcheck_answer_key.txt"
+
+cppcheck: cppcheck-student cppcheck-answer-key
+	@echo ""
+	@echo "✅ cppcheck analysis complete for both solutions"
+
+sanitize-student: build
+	@echo "Building student code with AddressSanitizer..."
+	@cd ../_student/build && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-fsanitize=address -fno-omit-frame-pointer -g" .. >/dev/null
+	@cd ../_student/build && $(MAKE) -s
+	@echo "Running student tests with AddressSanitizer..."
+	@cd ../_student/build && ASAN_OPTIONS=detect_leaks=1:halt_on_error=0 ./run_tests 2>&1 | tee sanitizer_student.txt || true
+	@echo "AddressSanitizer output: ../_student/build/sanitizer_student.txt"
+
+sanitize-answer-key:
+	@echo "Building answer key with AddressSanitizer..."
+	@cd answer_key/build && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-fsanitize=address -fno-omit-frame-pointer -g" .. >/dev/null
+	@cd answer_key/build && $(MAKE) -s
+	@echo "Running answer key tests with AddressSanitizer..."
+	@cd answer_key/build && ASAN_OPTIONS=detect_leaks=1:halt_on_error=0 ./run_tests 2>&1 | tee sanitizer_answer_key.txt || true
+	@echo "AddressSanitizer output: answer_key/build/sanitizer_answer_key.txt"
+
+sanitize: sanitize-student sanitize-answer-key
+	@echo ""
+	@echo "✅ AddressSanitizer analysis complete for both solutions"
+
+coverage-student: build
+	@echo "Generating coverage for student code..."
+	@cd ../_student/build && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="--coverage -fprofile-arcs -ftest-coverage" .. >/dev/null
+	@cd ../_student/build && $(MAKE) -s
+	@cd ../_student/build && ./run_tests >/dev/null 2>&1 || true
+	@if command -v gcov >/dev/null 2>&1; then \
+		cd ../_student/build && gcov ../src/legacy/*.c ../src/*.c >/dev/null 2>&1 || true; \
+		echo "Student coverage files: ../_student/build/*.gcov"; \
+	fi
+
+coverage-answer-key:
+	@echo "Generating coverage for answer key..."
+	@cd answer_key/build && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="--coverage -fprofile-arcs -ftest-coverage" .. >/dev/null
+	@cd answer_key/build && $(MAKE) -s
+	@cd answer_key/build && ./run_tests >/dev/null 2>&1 || true
+	@if command -v gcov >/dev/null 2>&1; then \
+		cd answer_key/build && gcov ../src/legacy/*.c ../src/*.c >/dev/null 2>&1 || true; \
+		echo "Answer key coverage files: answer_key/build/*.gcov"; \
+	fi
+
+coverage: coverage-student coverage-answer-key
+	@echo ""
+	@echo "✅ Coverage analysis complete for both solutions"
+
 clean:
 	@rm -rf ../_student/build
 	@cd answer_key && $(MAKE) clean >/dev/null 2>&1 || true
 	@rm -f comparison_report.md
+	@rm -f cppcheck_*.xml cppcheck_*.txt
+
+help:
+	@echo "Teacher Makefile - Available targets:"
+	@echo ""
+	@echo "Testing:"
+	@echo "  make test              - Test both solutions and generate comparison report"
+	@echo "  make final             - Test student solution with final tests"
+	@echo ""
+	@echo "Analysis Tools:"
+	@echo "  make valgrind          - Run Valgrind on both student and answer key"
+	@echo "  make valgrind-student  - Run Valgrind on student code only"
+	@echo "  make valgrind-answer-key - Run Valgrind on answer key only"
+	@echo ""
+	@echo "  make cppcheck          - Run cppcheck on both solutions"
+	@echo "  make cppcheck-student  - Run cppcheck on student code only"
+	@echo "  make cppcheck-answer-key - Run cppcheck on answer key only"
+	@echo ""
+	@echo "  make sanitize          - Run AddressSanitizer on both solutions"
+	@echo "  make sanitize-student  - Run AddressSanitizer on student code only"
+	@echo "  make sanitize-answer-key - Run AddressSanitizer on answer key only"
+	@echo ""
+	@echo "  make coverage          - Generate coverage for both solutions"
+	@echo "  make coverage-student  - Generate coverage for student code only"
+	@echo "  make coverage-answer-key - Generate coverage for answer key only"
+	@echo ""
+	@echo "Other:"
+	@echo "  make clean              - Clean all build directories"
+	@echo "  make help               - Show this help message"
 
