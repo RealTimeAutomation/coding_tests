@@ -2,6 +2,25 @@
 
 This directory contains the **corrected version** of all source code with all bugs fixed and optimizations applied. All unit tests (both initial and final) should pass with this code.
 
+## Code Quality Improvements
+
+The answer key includes significant refactoring beyond bug fixes:
+
+### Protocol Consolidation
+- **Shared Implementation**: All three protocol modules (apple, banana, carrot) now use a common implementation (`protocol_common.c`)
+- **Code Reduction**: ~490 lines → ~200 lines (59% reduction)
+- **Maintainability**: Single source of truth for protocol logic - fix bugs once instead of three times
+
+### Performance Optimizations
+- **memcpy Usage**: Replaced sequential character assignments with optimized `memcpy()` operations
+- **Standard Library**: Used `strncmp()`, `isspace()`, `toupper()` instead of manual implementations
+- **Efficient String Operations**: Optimized prefix/suffix checks using library functions
+
+### Code Quality
+- **Named Constants**: Extracted all magic numbers to named constants (e.g., `VERSION_HEX_DIGITS`, `DEVICE_ID_MAX_LEN`)
+- **Simplified Logic**: Removed redundant code and simplified complex functions
+- **Better Error Handling**: Improved case-insensitive parsing and validation
+
 ## Structure
 
 ```

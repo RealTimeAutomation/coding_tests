@@ -55,7 +55,7 @@ char** string_split(const char* str, char delimiter, size_t* count) {
                 *count = 0;
                 return NULL;
             }
-            strncpy(tokens[token_idx], str + start, token_len);
+            memcpy(tokens[token_idx], str + start, token_len);
             tokens[token_idx][token_len] = '\0';
             token_idx++;
             start = i + 1;
@@ -97,7 +97,7 @@ char* string_join(const char* const* strings, size_t count, char delimiter) {
 
     for (size_t i = 0; i < count; ++i) {
         size_t len = strlen(strings[i]);
-        strncpy(result + pos, strings[i], len);
+        memcpy(result + pos, strings[i], len);
         pos += len;
         if (i < count - 1) {
             result[pos] = delimiter;
@@ -139,18 +139,13 @@ bool string_starts_with(const char* str, const char* prefix) {
         return false;
     }
     
-    size_t str_len = strlen(str);
     size_t prefix_len = strlen(prefix);
-    if (prefix_len > str_len) {
-        return false;
+    if (prefix_len == 0) {
+        return true; // Empty prefix matches any string
     }
-
-    for (size_t i = 0; i < prefix_len; ++i) {
-        if (str[i] != prefix[i]) {
-            return false;
-        }
-    }
-    return true;
+    
+    // Use strncmp for efficient comparison
+    return strncmp(str, prefix, prefix_len) == 0;
 }
 
 bool string_ends_with(const char* str, const char* suffix) {
@@ -163,14 +158,12 @@ bool string_ends_with(const char* str, const char* suffix) {
     if (suffix_len > str_len) {
         return false;
     }
-
-    size_t start = str_len - suffix_len;
-    for (size_t i = 0; i < suffix_len; ++i) {
-        if (str[start + i] != suffix[i]) {
-            return false;
-        }
+    if (suffix_len == 0) {
+        return true; // Empty suffix matches any string
     }
-    return true;
+
+    // Use strncmp for efficient comparison
+    return strncmp(str + str_len - suffix_len, suffix, suffix_len) == 0;
 }
 
 bool string_parse_int(const char* str, int* out_value) {

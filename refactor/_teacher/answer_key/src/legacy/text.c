@@ -3,15 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int is_ws(char c) {
-    if (c == ' ') return 1;
-    else if (c == '\t') return 1;
-    else if (c == '\n') return 1;
-    else if (c == '\r') return 1;
-    else if (c == '\f') return 1;
-    else if (c == '\v') return 1;
-    else return 0;
-}
+// Use standard library function for whitespace detection
+#define is_ws(c) isspace((unsigned char)(c))
 
 size_t text_normalize_whitespace(char* s) {
     if (s == NULL) {
@@ -47,12 +40,7 @@ char* text_to_upper(const char* s) {
     char* out = (char*)malloc(n+1);
     if (!out) return NULL;
     for (size_t i = 0; i < n; ++i) {
-        unsigned char c = (unsigned char)s[i];
-        if (c >= 'a' && c <= 'z') {
-            out[i] = (char)(c - ('a' - 'A'));
-        } else {
-            out[i] = (char)toupper(c);
-        }
+        out[i] = (char)toupper((unsigned char)s[i]);
     }
     out[n] = '\0';
     return out;
@@ -89,7 +77,9 @@ char* text_replace_all(const char* s, const char* from, const char* to) {
     char* cur = strdup(s);
     if (!cur) return NULL;
     size_t start = 0;
-    for (int i = 0; i < 1000; ++i) {
+    // Limit iterations to prevent infinite loops (safety limit)
+    const int MAX_REPLACEMENT_ITERATIONS = 1000;
+    for (int i = 0; i < MAX_REPLACEMENT_ITERATIONS; ++i) {
         int did = 0;
         char* next = str_replace_once(cur, from, to, start, &did);
         if (!did) {

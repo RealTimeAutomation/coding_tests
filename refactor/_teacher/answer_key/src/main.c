@@ -6,145 +6,118 @@
 #include "protocol_carrot.h"
 #include "logger.h"
 
-static void test_apple_protocol(void) {
-    log_info("Testing Apple Protocol");
+// Generic protocol test function using function pointers
+// Since all protocol structs have identical layouts, we can use a union
+typedef union {
+    apple_message apple;
+    banana_message banana;
+    carrot_message carrot;
+} protocol_message;
+
+typedef struct {
+    const char* name;
+    int version;
+    const char* device_id;
+    int temperature;
+    bool active;
+    bool (*parse)(const char*, size_t, void*);
+    int (*serialize)(const void*, char*, size_t);
+    bool (*validate)(const void*);
+    unsigned int (*checksum)(const void*);
+} protocol_test_config;
+
+static void test_protocol_generic(const protocol_test_config* config) {
+    log_info("Testing %s Protocol", config->name);
     
-    // Create a test message
-    apple_message msg = {
+    // Create a test message (all protocols have identical struct layout)
+    protocol_message msg;
+    msg.apple.version = config->version;
+    strncpy(msg.apple.device_id, config->device_id, sizeof(msg.apple.device_id) - 1);
+    msg.apple.device_id[sizeof(msg.apple.device_id) - 1] = '\0';
+    msg.apple.temperature = config->temperature;
+    msg.apple.active = config->active;
+    
+    log_debug("Created %s message: version=0x%04X, device_id=%s, temp=%d, active=%d",
+              config->name, msg.apple.version, msg.apple.device_id, 
+              msg.apple.temperature, msg.apple.active);
+    
+    // Serialize
+    char buffer[256];
+    int written = config->serialize(&msg, buffer, sizeof(buffer));
+    if (written < 0) {
+        log_error("Failed to serialize %s message", config->name);
+        return;
+    }
+    buffer[written] = '\0';
+    
+    log_info("Serialized %s message (%d bytes): %s", config->name, written, buffer);
+    
+    // Parse back
+    protocol_message parsed;
+    if (config->parse(buffer, written, &parsed)) {
+        log_info("Parsed %s message successfully", config->name);
+        log_debug("Parsed: version=0x%04X, device_id=%s, temp=%d, active=%d",
+                  parsed.apple.version, parsed.apple.device_id, 
+                  parsed.apple.temperature, parsed.apple.active);
+        
+        // Validate
+        if (config->validate(&parsed)) {
+            log_info("%s message validation: PASSED", config->name);
+        } else {
+            log_warn("%s message validation: FAILED", config->name);
+        }
+        
+        // Checksum
+        unsigned int checksum = config->checksum(&parsed);
+        log_debug("%s message checksum: 0x%08X", config->name, checksum);
+    } else {
+        log_error("Failed to parse %s message", config->name);
+    }
+}
+
+static void test_apple_protocol(void) {
+    protocol_test_config config = {
+        .name = "Apple",
         .version = 0x0001,
         .device_id = "APPLE_DEVICE_001",
         .temperature = 250,
-        .active = true
+        .active = true,
+        .parse = (bool(*)(const char*, size_t, void*))apple_parse,
+        .serialize = (int(*)(const void*, char*, size_t))apple_serialize,
+        .validate = (bool(*)(const void*))apple_validate,
+        .checksum = (unsigned int(*)(const void*))apple_checksum
     };
-    
-    log_debug("Created apple message: version=0x%04X, device_id=%s, temp=%d, active=%d",
-              msg.version, msg.device_id, msg.temperature, msg.active);
-    
-    // Serialize
-    char buffer[256];
-    int written = apple_serialize(&msg, buffer, sizeof(buffer));
-    if (written < 0) {
-        log_error("Failed to serialize apple message");
-        return;
-    }
-    buffer[written] = '\0';
-    
-    log_info("Serialized apple message (%d bytes): %s", written, buffer);
-    
-    // Parse back
-    apple_message parsed;
-    if (apple_parse(buffer, written, &parsed)) {
-        log_info("Parsed apple message successfully");
-        log_debug("Parsed: version=0x%04X, device_id=%s, temp=%d, active=%d",
-                  parsed.version, parsed.device_id, parsed.temperature, parsed.active);
-        
-        // Validate
-        if (apple_validate(&parsed)) {
-            log_info("Apple message validation: PASSED");
-        } else {
-            log_warn("Apple message validation: FAILED");
-        }
-        
-        // Checksum
-        unsigned int checksum = apple_checksum(&parsed);
-        log_debug("Apple message checksum: 0x%08X", checksum);
-    } else {
-        log_error("Failed to parse apple message");
-    }
+    test_protocol_generic(&config);
 }
 
 static void test_banana_protocol(void) {
-    log_info("Testing Banana Protocol");
-    
-    // Create a test message
-    banana_message msg = {
+    protocol_test_config config = {
+        .name = "Banana",
         .version = 0x0002,
         .device_id = "BANANA_DEVICE_002",
         .temperature = -100,
-        .active = false
+        .active = false,
+        .parse = (bool(*)(const char*, size_t, void*))banana_parse,
+        .serialize = (int(*)(const void*, char*, size_t))banana_serialize,
+        .validate = (bool(*)(const void*))banana_validate,
+        .checksum = (unsigned int(*)(const void*))banana_checksum
     };
-    
-    log_debug("Created banana message: version=0x%04X, device_id=%s, temp=%d, active=%d",
-              msg.version, msg.device_id, msg.temperature, msg.active);
-    
-    // Serialize
-    char buffer[256];
-    int written = banana_serialize(&msg, buffer, sizeof(buffer));
-    if (written < 0) {
-        log_error("Failed to serialize banana message");
-        return;
-    }
-    buffer[written] = '\0';
-    
-    log_info("Serialized banana message (%d bytes): %s", written, buffer);
-    
-    // Parse back
-    banana_message parsed;
-    if (banana_parse(buffer, written, &parsed)) {
-        log_info("Parsed banana message successfully");
-        log_debug("Parsed: version=0x%04X, device_id=%s, temp=%d, active=%d",
-                  parsed.version, parsed.device_id, parsed.temperature, parsed.active);
-        
-        // Validate
-        if (banana_validate(&parsed)) {
-            log_info("Banana message validation: PASSED");
-        } else {
-            log_warn("Banana message validation: FAILED");
-        }
-        
-        // Checksum
-        unsigned int checksum = banana_checksum(&parsed);
-        log_debug("Banana message checksum: 0x%08X", checksum);
-    } else {
-        log_error("Failed to parse banana message");
-    }
+    test_protocol_generic(&config);
 }
 
 static void test_carrot_protocol(void) {
-    log_info("Testing Carrot Protocol");
-    
-    // Create a test message
-    carrot_message msg = {
+    protocol_test_config config = {
+        .name = "Carrot",
         .version = 0x0003,
         .device_id = "CARROT_DEVICE_003",
         .temperature = 500,
-        .active = true
+        .active = true,
+        .parse = (bool(*)(const char*, size_t, void*))carrot_parse,
+        .serialize = (int(*)(const void*, char*, size_t))carrot_serialize,
+        .validate = (bool(*)(const void*))carrot_validate,
+        .checksum = (unsigned int(*)(const void*))carrot_checksum
     };
-    
-    log_debug("Created carrot message: version=0x%04X, device_id=%s, temp=%d, active=%d",
-              msg.version, msg.device_id, msg.temperature, msg.active);
-    
-    // Serialize
-    char buffer[256];
-    int written = carrot_serialize(&msg, buffer, sizeof(buffer));
-    if (written < 0) {
-        log_error("Failed to serialize carrot message");
-        return;
-    }
-    buffer[written] = '\0';
-    
-    log_info("Serialized carrot message (%d bytes): %s", written, buffer);
-    
-    // Parse back
-    carrot_message parsed;
-    if (carrot_parse(buffer, written, &parsed)) {
-        log_info("Parsed carrot message successfully");
-        log_debug("Parsed: version=0x%04X, device_id=%s, temp=%d, active=%d",
-                  parsed.version, parsed.device_id, parsed.temperature, parsed.active);
-        
-        // Validate
-        if (carrot_validate(&parsed)) {
-            log_info("Carrot message validation: PASSED");
-        } else {
-            log_warn("Carrot message validation: FAILED");
-        }
-        
-        // Checksum
-        unsigned int checksum = carrot_checksum(&parsed);
-        log_debug("Carrot message checksum: 0x%08X", checksum);
-    } else {
-        log_error("Failed to parse carrot message");
-    }
+    test_protocol_generic(&config);
 }
 
 static void test_all_protocols_interaction(void) {

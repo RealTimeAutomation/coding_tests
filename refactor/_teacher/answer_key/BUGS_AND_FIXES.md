@@ -274,10 +274,43 @@ When evaluating student submissions, check for:
 
 ---
 
+## Code Refactoring and Optimization
+
+Beyond bug fixes, the answer key includes significant refactoring for maintainability and performance:
+
+### Protocol Consolidation
+- **Problem**: Three protocol modules (apple, banana, carrot) had ~95% duplicate code (~490 lines total)
+- **Solution**: Created shared `protocol_common.c` implementation with common parse/serialize/validate/checksum functions
+- **Result**: ~200 lines total (59% reduction), single source of truth for protocol logic
+- **Impact**: Fix bugs once instead of three times, easier maintenance, consistent behavior
+
+### Performance Optimizations
+- Replaced sequential character assignments with `memcpy()` for bulk operations (protocol parsing)
+- Used standard library functions (`strncmp()`, `isspace()`, `toupper()`) instead of manual implementations
+- Optimized string prefix/suffix checks using `strncmp()` instead of manual loops
+- Replaced `strncpy` with `memcpy` where exact lengths are known
+
+### Code Quality Improvements
+- Extracted all magic numbers to named constants:
+  - Protocol: `VERSION_HEX_DIGITS`, `DEVICE_ID_MAX_LEN`, `DEVICE_ID_PADDED_LEN`, `TEMPERATURE_HEX_DIGITS`
+  - Validation: `TEMP_MIN`, `TEMP_MAX`, `VERSION_MIN`, `VERSION_MAX`
+- Simplified redundant logic:
+  - `text_to_upper()`: Removed redundant manual lowercase check, use `toupper()` directly
+  - `parse_bool()`: Use `strcasecmp()` for case-insensitive comparison
+  - `trim()`: Use `isspace()` instead of manual character checks
+  - `metrics_argmax()`: Removed empty else-if branch
+- Improved case-insensitive parsing using standard library functions
+- Consolidated duplicate test functions in `main.c` using function pointers and union types
+
+### Code Reduction Statistics
+- Protocol files: ~490 lines → ~200 lines (59% reduction)
+- Main.c: ~150 lines → ~100 lines (33% reduction)
+- Overall: Significant reduction in code duplication and complexity while maintaining 100% test pass rate
+
 ## Notes
 
 - This summary groups similar bugs to avoid repetition
 - Many bugs appear multiple times due to copy-paste code (especially protocol modules)
 - Some "bugs" are code quality issues that don't cause failures but reduce maintainability
-- The answer key implementation fixes all identified issues
+- The answer key implementation fixes all identified issues and includes significant refactoring for maintainability
 

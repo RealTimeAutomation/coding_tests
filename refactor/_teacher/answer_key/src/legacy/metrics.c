@@ -30,10 +30,8 @@ int metrics_argmax(const int* arr, size_t n) {
         if (arr[i] > maxv) {
             maxv = arr[i];
             idx = (int)i;
-        } else if (arr[i] == maxv && i > (size_t)idx) {
-            // Keep first occurrence (don't update idx)
-            // This maintains the original behavior of preferring first occurrence
         }
+        // For equal values, keep first occurrence (idx already points to first max)
     }
     return idx;
 }

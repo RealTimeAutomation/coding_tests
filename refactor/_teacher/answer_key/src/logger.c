@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <ctype.h>
 
 static log_level_t current_level = LOG_WARN;
 
@@ -19,16 +20,24 @@ static log_level_t parse_log_level(const char* level_str) {
         return LOG_WARN;
     }
     
-    if (strcmp(level_str, "NONE") == 0 || strcmp(level_str, "none") == 0) {
-        return LOG_NONE;
-    } else if (strcmp(level_str, "ERROR") == 0 || strcmp(level_str, "error") == 0) {
-        return LOG_ERROR;
-    } else if (strcmp(level_str, "WARN") == 0 || strcmp(level_str, "warn") == 0) {
-        return LOG_WARN;
-    } else if (strcmp(level_str, "INFO") == 0 || strcmp(level_str, "info") == 0) {
-        return LOG_INFO;
-    } else if (strcmp(level_str, "DEBUG") == 0 || strcmp(level_str, "debug") == 0) {
-        return LOG_DEBUG;
+    // Case-insensitive comparison
+    for (int i = 0; i < 5; ++i) {
+        const char* level_name = level_names[i];
+        size_t len = strlen(level_name);
+        if (strlen(level_str) == len) {
+            int match = 1;
+            for (size_t j = 0; j < len; ++j) {
+                char c1 = (char)toupper((unsigned char)level_str[j]);
+                char c2 = (char)toupper((unsigned char)level_name[j]);
+                if (c1 != c2) {
+                    match = 0;
+                    break;
+                }
+            }
+            if (match) {
+                return (log_level_t)i;
+            }
+        }
     }
     
     return LOG_WARN;

@@ -139,10 +139,24 @@ CMakeFiles/legacylib.dir/src/legacy/string_utils.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/legacylib.dir/src/legacy/string_utils.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/string_utils.c -o CMakeFiles/legacylib.dir/src/legacy/string_utils.c.s
 
+CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o: CMakeFiles/legacylib.dir/flags.make
+CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o: ../src/legacy/protocol_common.c
+CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o: CMakeFiles/legacylib.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o -MF CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o.d -o CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o -c /mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_common.c
+
+CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_common.c > CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.i
+
+CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_common.c -o CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.s
+
 CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o: CMakeFiles/legacylib.dir/flags.make
 CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o: ../src/legacy/protocol_apple.c
 CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o: CMakeFiles/legacylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o -MF CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o.d -o CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o -c /mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_apple.c
 
 CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.i: cmake_force
@@ -156,7 +170,7 @@ CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.s: cmake_force
 CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o: CMakeFiles/legacylib.dir/flags.make
 CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o: ../src/legacy/protocol_banana.c
 CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o: CMakeFiles/legacylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o -MF CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o.d -o CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o -c /mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_banana.c
 
 CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.i: cmake_force
@@ -170,7 +184,7 @@ CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.s: cmake_force
 CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o: CMakeFiles/legacylib.dir/flags.make
 CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o: ../src/legacy/protocol_carrot.c
 CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o: CMakeFiles/legacylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o -MF CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o.d -o CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o -c /mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_carrot.c
 
 CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.i: cmake_force
@@ -184,7 +198,7 @@ CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.s: cmake_force
 CMakeFiles/legacylib.dir/src/logger.c.o: CMakeFiles/legacylib.dir/flags.make
 CMakeFiles/legacylib.dir/src/logger.c.o: ../src/logger.c
 CMakeFiles/legacylib.dir/src/logger.c.o: CMakeFiles/legacylib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/legacylib.dir/src/logger.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/legacylib.dir/src/logger.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/legacylib.dir/src/logger.c.o -MF CMakeFiles/legacylib.dir/src/logger.c.o.d -o CMakeFiles/legacylib.dir/src/logger.c.o -c /mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/logger.c
 
 CMakeFiles/legacylib.dir/src/logger.c.i: cmake_force
@@ -202,6 +216,7 @@ legacylib_OBJECTS = \
 "CMakeFiles/legacylib.dir/src/legacy/config.c.o" \
 "CMakeFiles/legacylib.dir/src/legacy/list.c.o" \
 "CMakeFiles/legacylib.dir/src/legacy/string_utils.c.o" \
+"CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o" \
 "CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o" \
 "CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o" \
 "CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o" \
@@ -215,13 +230,14 @@ liblegacylib.a: CMakeFiles/legacylib.dir/src/legacy/text.c.o
 liblegacylib.a: CMakeFiles/legacylib.dir/src/legacy/config.c.o
 liblegacylib.a: CMakeFiles/legacylib.dir/src/legacy/list.c.o
 liblegacylib.a: CMakeFiles/legacylib.dir/src/legacy/string_utils.c.o
+liblegacylib.a: CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o
 liblegacylib.a: CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o
 liblegacylib.a: CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o
 liblegacylib.a: CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o
 liblegacylib.a: CMakeFiles/legacylib.dir/src/logger.c.o
 liblegacylib.a: CMakeFiles/legacylib.dir/build.make
 liblegacylib.a: CMakeFiles/legacylib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking C static library liblegacylib.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking C static library liblegacylib.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/legacylib.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/legacylib.dir/link.txt --verbose=$(VERBOSE)
 

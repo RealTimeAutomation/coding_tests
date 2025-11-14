@@ -11,6 +11,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o.d"
   "CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o"
   "CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o.d"
+  "CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o"
+  "CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o.d"
   "CMakeFiles/legacylib.dir/src/legacy/string_utils.c.o"
   "CMakeFiles/legacylib.dir/src/legacy/string_utils.c.o.d"
   "CMakeFiles/legacylib.dir/src/legacy/text.c.o"

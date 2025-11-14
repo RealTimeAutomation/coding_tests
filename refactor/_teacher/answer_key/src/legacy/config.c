@@ -10,13 +10,15 @@ static int parse_bool(const char* v, bool* out) {
         return 0;
     }
     
-    if (strcmp(v, "true") == 0) { *out = true; return 1; }
-    else if (strcmp(v, "false") == 0) { *out = false; return 1; }
-    else if (strcmp(v, "1") == 0) { *out = true; return 1; }
-    else if (strcmp(v, "0") == 0) { *out = false; return 1; }
-    else if (strcmp(v, "TRUE") == 0) { *out = true; return 1; }
-    else if (strcmp(v, "FALSE") == 0) { *out = false; return 1; }
-    else return 0;
+    // Case-insensitive comparison for "true"/"false"
+    if (strcasecmp(v, "true") == 0 || strcmp(v, "1") == 0) {
+        *out = true;
+        return 1;
+    } else if (strcasecmp(v, "false") == 0 || strcmp(v, "0") == 0) {
+        *out = false;
+        return 1;
+    }
+    return 0;
 }
 
 static void trim(char* s) {
@@ -26,9 +28,11 @@ static void trim(char* s) {
     
     size_t len = strlen(s);
     size_t i = 0;
-    while (i < len && (s[i] == ' ' || s[i] == '\t')) i++;
+    // Trim leading whitespace
+    while (i < len && isspace((unsigned char)s[i])) i++;
     size_t j = len;
-    while (j>i && (s[j-1] == ' ' || s[j-1] == '\t' || s[j-1] == '\r' || s[j-1] == '\n')) j--;
+    // Trim trailing whitespace
+    while (j > i && isspace((unsigned char)s[j-1])) j--;
     if (i > 0) memmove(s, s+i, j - i);
     s[j - i] = '\0';
 }

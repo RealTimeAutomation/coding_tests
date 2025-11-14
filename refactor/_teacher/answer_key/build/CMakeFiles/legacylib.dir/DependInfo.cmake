@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_apple.c" "CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o" "gcc" "CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o.d"
   "/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_banana.c" "CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o" "gcc" "CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o.d"
   "/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_carrot.c" "CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o" "gcc" "CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o.d"
+  "/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/protocol_common.c" "CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o" "gcc" "CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o.d"
   "/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/string_utils.c" "CMakeFiles/legacylib.dir/src/legacy/string_utils.c.o" "gcc" "CMakeFiles/legacylib.dir/src/legacy/string_utils.c.o.d"
   "/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/legacy/text.c" "CMakeFiles/legacylib.dir/src/legacy/text.c.o" "gcc" "CMakeFiles/legacylib.dir/src/legacy/text.c.o.d"
   "/mnt/c/Projects/coding_tests/refactor/_teacher/answer_key/src/logger.c" "CMakeFiles/legacylib.dir/src/logger.c.o" "gcc" "CMakeFiles/legacylib.dir/src/logger.c.o.d"

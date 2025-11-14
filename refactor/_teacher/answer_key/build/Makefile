@@ -322,6 +322,30 @@ src/legacy/protocol_carrot.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/legacylib.dir/build.make CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.s
 .PHONY : src/legacy/protocol_carrot.c.s
 
+src/legacy/protocol_common.o: src/legacy/protocol_common.c.o
+.PHONY : src/legacy/protocol_common.o
+
+# target to build an object file
+src/legacy/protocol_common.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/legacylib.dir/build.make CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.o
+.PHONY : src/legacy/protocol_common.c.o
+
+src/legacy/protocol_common.i: src/legacy/protocol_common.c.i
+.PHONY : src/legacy/protocol_common.i
+
+# target to preprocess a source file
+src/legacy/protocol_common.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/legacylib.dir/build.make CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.i
+.PHONY : src/legacy/protocol_common.c.i
+
+src/legacy/protocol_common.s: src/legacy/protocol_common.c.s
+.PHONY : src/legacy/protocol_common.s
+
+# target to generate assembly for a file
+src/legacy/protocol_common.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/legacylib.dir/build.make CMakeFiles/legacylib.dir/src/legacy/protocol_common.c.s
+.PHONY : src/legacy/protocol_common.c.s
+
 src/legacy/string_utils.o: src/legacy/string_utils.c.o
 .PHONY : src/legacy/string_utils.o
 
@@ -908,6 +932,9 @@ help:
 	@echo "... src/legacy/protocol_carrot.o"
 	@echo "... src/legacy/protocol_carrot.i"
 	@echo "... src/legacy/protocol_carrot.s"
+	@echo "... src/legacy/protocol_common.o"
+	@echo "... src/legacy/protocol_common.i"
+	@echo "... src/legacy/protocol_common.s"
 	@echo "... src/legacy/string_utils.o"
 	@echo "... src/legacy/string_utils.i"
 	@echo "... src/legacy/string_utils.s"
