@@ -78,6 +78,26 @@ Results are saved to:
   - Average: 70-90/96 passed
   - Poor: <70/96 passed
 
+## Analysis Tools
+
+The answer key Makefile supports analysis tools:
+
+```bash
+cd refactor/_teacher/answer_key
+
+# Note: Analysis tools are also available from parent _teacher/ directory
+# which can compare both student and answer key solutions
+```
+
+For comparison analysis, use the parent `_teacher/` directory:
+```bash
+cd refactor/_teacher
+make valgrind    # Compare memory leaks in both solutions
+make cppcheck    # Compare static analysis results
+make sanitize    # Compare runtime memory errors
+make coverage    # Compare code coverage
+```
+
 ## Documentation
 
 - `BUGS_AND_FIXES.md` - High-level bug summary for talking points

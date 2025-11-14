@@ -217,11 +217,41 @@ The logging levels are: `NONE`, `ERROR`, `WARN`, `INFO`, `DEBUG` (from least to 
 
 ## Testing & Analysis Tools
 
+All analysis tools are available via Makefile targets. See `COMMANDS.md` for complete reference.
+
+### Quick Reference
+
+```bash
+cd refactor/_student
+
+# Memory leak detection
+make valgrind
+# Output: build/valgrind_output.txt
+
+# Static code analysis
+make cppcheck
+# Output: build/cppcheck_report.xml, build/cppcheck_report.txt
+
+# Runtime memory error detection
+make sanitize
+# Output: build/sanitizer_output.txt
+
+# Code coverage
+make coverage
+# Output: build/*.gcov files, build/coverage_html/ (if lcov installed)
+```
+
 ### Code Coverage
 
 Use **gcov** (GCC) or **llvm-cov** (Clang) to measure test coverage before and after refactoring:
 
-**Before refactoring:**
+**Using Makefile (Recommended):**
+```bash
+cd refactor/_student
+make coverage
+```
+
+**Manual method:**
 ```bash
 cd refactor/_student/build
 cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="--coverage -fprofile-arcs -ftest-coverage"
@@ -231,28 +261,26 @@ gcov ../src/legacy/*.c
 # View coverage reports in .gcov files
 ```
 
-**After refactoring:**
-```bash
-# Repeat the same steps and compare coverage
-```
-
 ### Memory Analysis
 
 Use **Valgrind** (Linux/WSL) or **AddressSanitizer** to detect memory issues:
 
-**Valgrind (Linux/WSL):**
+**Using Makefile (Recommended):**
 ```bash
-# Before refactoring
+cd refactor/_student
+make valgrind    # Valgrind
+make sanitize    # AddressSanitizer
+```
+
+**Valgrind (Linux/WSL) - Manual:**
+```bash
 cd refactor/_student
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./build/run_tests
 valgrind --leak-check=full --show-leak-kinds=all ./build/main
-
-# After refactoring - compare results
 ```
 
-**AddressSanitizer (GCC/Clang):**
+**AddressSanitizer (GCC/Clang) - Manual:**
 ```bash
-# Build with AddressSanitizer
 cd refactor/_student/build
 cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-fsanitize=address -g"
 cmake --build .
@@ -261,6 +289,14 @@ cmake --build .
 ```
 
 ### Static Analysis
+
+**Using Makefile (Recommended):**
+```bash
+cd refactor/_student
+make cppcheck
+```
+
+**Manual method:**
 
 Use **cppcheck** or compiler warnings for static analysis:
 

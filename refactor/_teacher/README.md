@@ -20,7 +20,27 @@ The final tests in this directory:
 
 ## Usage
 
-From the `refactor/` directory:
+From the `refactor/_teacher/` directory:
+
+### Test and Compare Both Solutions (Recommended)
+
+```bash
+cd refactor/_teacher
+make test
+# or simply
+make
+```
+
+This will:
+1. Test answer key solution with all tests (64 initial + 96 final)
+2. Test student solution with all tests (64 initial + 96 final)
+3. Generate comparison report: `comparison_report.md`
+
+**Expected:**
+- Answer Key: 64/64 initial + 96/96 final = 160/160 ✅
+- Student: 64/64 initial + many final failures ❌
+
+### Test Student Only
 
 ```bash
 cd refactor/_teacher
@@ -31,7 +51,7 @@ This will:
 1. Build the project (uses code from `../_student/`)
 2. Run the initial test suite (should pass)
 3. Run the final test suite (will show failures)
-4. Generate markdown reports in `../build/`
+4. Generate markdown reports in `../_student/build/`
 
 ## Before Distributing to Students
 
@@ -41,9 +61,42 @@ This will:
 
 ## Test Results
 
-Results are saved to:
-- `../build/test_results.md` - Initial test results (should all pass)
-- `../build/test_results_final.md` - Final test results (will show failures)
+### Comparison Report (make test)
+- `comparison_report.md` - Side-by-side comparison of student vs answer key
+
+### Student Test Results (make final)
+- `../_student/build/test_results.md` - Initial test results (should all pass)
+- `../_student/build/test_results_final.md` - Final test results (will show failures)
+
+## Analysis Tools
+
+The teacher Makefile also supports analysis tools for both solutions:
+
+```bash
+cd refactor/_teacher
+
+# Memory leak detection
+make valgrind          # Both solutions
+make valgrind-student  # Student only
+make valgrind-answer-key # Answer key only
+
+# Static analysis
+make cppcheck          # Both solutions
+make cppcheck-student  # Student only
+make cppcheck-answer-key # Answer key only
+
+# Runtime memory error detection
+make sanitize          # Both solutions
+make sanitize-student  # Student only
+make sanitize-answer-key # Answer key only
+
+# Code coverage
+make coverage          # Both solutions
+make coverage-student  # Student only
+make coverage-answer-key # Answer key only
+```
+
+See `COMMANDS.md` for complete command reference.
 
 The final tests are designed to help you evaluate:
 - How well students found and fixed bugs
