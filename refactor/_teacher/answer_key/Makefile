@@ -2,7 +2,7 @@
 # This builds and tests the corrected reference implementation
 # Can also test student code from ../../_student/ using full test suites
 
-.PHONY: all clean build test test-final test-all test-student help
+.PHONY: all clean build test test-final test-all test-student docs help
 
 all: test-all
 
@@ -58,8 +58,21 @@ test-student:
 	@echo "  - build/student_test/student_test_results.md"
 	@echo "  - build/student_test/student_test_results_final.md"
 
+docs:
+	@echo "Generating API documentation..."
+	@if ! command -v doxygen >/dev/null 2>&1; then \
+		echo "❌ Doxygen not found. Install with:"; \
+		echo "   sudo apt-get install doxygen  # Linux"; \
+		echo "   brew install doxygen          # macOS"; \
+		exit 1; \
+	fi
+	@doxygen Doxyfile >/dev/null 2>&1 || doxygen Doxyfile
+	@echo ""
+	@echo "✅ Documentation generated successfully!"
+	@echo "   Open docs/html/index.html in your browser"
+
 clean:
-	@rm -rf build
+	@rm -rf build docs
 
 help:
 	@echo "Answer Key Makefile"
@@ -70,8 +83,10 @@ help:
 	@echo "  make test-final     - Run final tests (should all pass)"
 	@echo "  make test-all       - Run all tests"
 	@echo "  make test-student   - Test student code from ../../_student/ with full test suites"
-	@echo "  make clean          - Remove build directory"
+	@echo "  make docs           - Generate API documentation (HTML)"
+	@echo "  make clean          - Remove build directory and docs"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make test-all                    # Test answer key"
 	@echo "  make test-student                # Test student code with full suites"
+	@echo "  make docs                        # Generate API documentation"

@@ -1,6 +1,6 @@
 # Teacher-only Makefile for running comprehensive tests and comparisons
 # This directory should be DELETED before distributing to students
-.PHONY: all clean build test final compare
+.PHONY: all clean build test test-student test-answer-key final compare docs docs-student docs-answer-key help
 
 all: test
 
@@ -204,6 +204,32 @@ coverage: coverage-student coverage-answer-key
 	@echo ""
 	@echo "✅ Coverage analysis complete for both solutions"
 
+docs-student:
+	@echo "Generating API documentation for student code..."
+	@if ! command -v doxygen >/dev/null 2>&1; then \
+		echo "❌ Doxygen not found. Install with:"; \
+		echo "   sudo apt-get install doxygen  # Linux"; \
+		echo "   brew install doxygen          # macOS"; \
+		exit 1; \
+	fi
+	@cd ../_student && $(MAKE) docs >/dev/null 2>&1 || cd ../_student && $(MAKE) docs
+	@echo "✅ Student documentation: ../_student/docs/html/index.html"
+
+docs-answer-key:
+	@echo "Generating API documentation for answer key..."
+	@if ! command -v doxygen >/dev/null 2>&1; then \
+		echo "❌ Doxygen not found. Install with:"; \
+		echo "   sudo apt-get install doxygen  # Linux"; \
+		echo "   brew install doxygen          # macOS"; \
+		exit 1; \
+	fi
+	@cd answer_key && $(MAKE) docs >/dev/null 2>&1 || cd answer_key && $(MAKE) docs
+	@echo "✅ Answer key documentation: answer_key/docs/html/index.html"
+
+docs: docs-student docs-answer-key
+	@echo ""
+	@echo "✅ Documentation generated for both solutions"
+
 clean:
 	@rm -rf ../_student/build
 	@cd answer_key && $(MAKE) clean >/dev/null 2>&1 || true
@@ -215,7 +241,14 @@ help:
 	@echo ""
 	@echo "Testing:"
 	@echo "  make test              - Test both solutions and generate comparison report"
+	@echo "  make test-student      - Test student solution only"
+	@echo "  make test-answer-key  - Test answer key solution only"
 	@echo "  make final             - Test student solution with final tests"
+	@echo ""
+	@echo "Documentation:"
+	@echo "  make docs              - Generate API documentation for both solutions"
+	@echo "  make docs-student      - Generate API documentation for student code only"
+	@echo "  make docs-answer-key  - Generate API documentation for answer key only"
 	@echo ""
 	@echo "Analysis Tools:"
 	@echo "  make valgrind          - Run Valgrind on both student and answer key"

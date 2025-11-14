@@ -1,5 +1,5 @@
 # Convenience Makefile to build with or without CMake
-.PHONY: all clean build test valgrind cppcheck sanitize coverage help
+.PHONY: all clean build test valgrind cppcheck sanitize coverage docs help
 
 all: build
 
@@ -71,8 +71,21 @@ coverage: build
 		echo "HTML coverage report: build/coverage_html/index.html"; \
 	fi
 
+docs:
+	@echo "Generating API documentation..."
+	@if ! command -v doxygen >/dev/null 2>&1; then \
+		echo "❌ Doxygen not found. Install with:"; \
+		echo "   sudo apt-get install doxygen  # Linux"; \
+		echo "   brew install doxygen          # macOS"; \
+		exit 1; \
+	fi
+	@doxygen Doxyfile >/dev/null 2>&1 || doxygen Doxyfile
+	@echo ""
+	@echo "✅ Documentation generated successfully!"
+	@echo "   Open docs/html/index.html in your browser"
+
 clean:
-	@rm -rf build
+	@rm -rf build docs
 
 help:
 	@echo "Available targets:"
@@ -82,10 +95,12 @@ help:
 	@echo "  make cppcheck   - Run cppcheck (static code analysis)"
 	@echo "  make sanitize   - Build and test with AddressSanitizer"
 	@echo "  make coverage   - Generate code coverage report"
-	@echo "  make clean      - Remove build directory"
+	@echo "  make docs       - Generate API documentation (HTML)"
+	@echo "  make clean      - Remove build directory and docs"
 	@echo ""
 	@echo "Example:"
 	@echo "  make valgrind   # Check for memory leaks"
 	@echo "  make cppcheck   # Find potential bugs statically"
 	@echo "  make sanitize   # Detect memory errors at runtime"
 	@echo "  make coverage   # See which code is tested"
+	@echo "  make docs       # Generate API documentation"

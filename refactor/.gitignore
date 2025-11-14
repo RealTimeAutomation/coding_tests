@@ -1,5 +1,6 @@
 # Build artifacts
 build/
+**/build/
 *.o
 *.a
 *.exe
@@ -15,9 +16,12 @@ CTestTestfile.cmake
 Makefile
 *.cmake
 !CMakeLists.txt
+!*.cmake.in
 
 # Test artifacts
 test_results*.md
+comparison_report.md
+test_comparison.md
 *.log
 
 # Temporary files
@@ -29,15 +33,17 @@ test_results*.md
 tests_tmp*.cfg
 test_*.cfg
 
+# IDE files
+.vscode/
+.idea/
+*.code-workspace
+
 # Coverage reports
 *.gcov
 *.gcda
 *.gcno
 coverage/
 htmlcov/
-
-# Documentation
-docs/
 
 # Valgrind output
 *.valgrind
@@ -47,3 +53,7 @@ valgrind-out.txt
 *.asan
 *.msan
 *.tsan
+
+# Documentation
+docs/
+
