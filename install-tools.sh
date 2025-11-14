@@ -217,13 +217,31 @@ install_coverage_tools() {
     if [ "$OS" == "macos" ]; then
         # gcov comes with Xcode, lcov needs to be installed
         if [[ " ${MISSING_COVERAGE[@]} " =~ " lcov " ]]; then
-            $INSTALL_CMD lcov
+            $INSTALL_CMD lcov || {
+                print_error "Failed to install lcov"
+                return 1
+            }
+        fi
+        # gcov should be available with Xcode, but if not, it's part of gcc
+        if [[ " ${MISSING_COVERAGE[@]} " =~ " gcov " ]]; then
+            print_warning "gcov should come with Xcode. If missing, install Xcode Command Line Tools."
         fi
     else
-        if [ "$OS" == "debian" ]; then
-            $INSTALL_CMD gcov lcov
-        else
-            $INSTALL_CMD gcc-c++ lcov
+        # Linux: gcov comes with gcc (build-essential), only need to install lcov
+        if [[ " ${MISSING_COVERAGE[@]} " =~ " gcov " ]]; then
+            print_warning "gcov should be installed with gcc. If missing, ensure build-essential is installed."
+            # Try to install gcc if gcov is missing (gcov comes with gcc)
+            if [ "$OS" == "debian" ]; then
+                $INSTALL_CMD gcc || print_warning "Could not install gcc (gcov comes with gcc)"
+            else
+                $INSTALL_CMD gcc || print_warning "Could not install gcc (gcov comes with gcc)"
+            fi
+        fi
+        if [[ " ${MISSING_COVERAGE[@]} " =~ " lcov " ]]; then
+            $INSTALL_CMD lcov || {
+                print_error "Failed to install lcov"
+                return 1
+            }
         fi
     fi
     
