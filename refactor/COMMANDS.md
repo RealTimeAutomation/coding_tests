@@ -1,4 +1,4 @@
-l# Command Reference
+# Command Reference
 
 Quick reference for all build and test commands.
 
