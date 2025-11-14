@@ -4,7 +4,11 @@
 all: build
 
 build:
-	@mkdir -p build && cd build && cmake .. >/dev/null && $(MAKE) -s
+	@if [ ! -d build ]; then \
+		mkdir -p build; \
+		chmod 755 build 2>/dev/null || true; \
+	fi
+	@cd build && cmake .. >/dev/null && $(MAKE) -s
 
 test: build
 	@echo "Running initial test suite..."

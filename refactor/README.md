@@ -192,6 +192,8 @@ run_tests.exe
 - Use the full path to cmake (e.g., `"C:\Program Files\CMake\bin\cmake.exe"`), or
 - Use WSL if CMake is installed there
 
+**Troubleshooting:** If you encounter "Operation not permitted" errors in WSL, see `TROUBLESHOOTING.md` in the `_student/` directory. Common solutions include using a Linux filesystem instead of `/mnt/c/` or fixing file permissions.
+
 ### Running the Main Program
 
 The main program demonstrates all three protocols (apple, banana, carrot) with configurable logging:
