@@ -33,9 +33,9 @@ cppcheck: build
 		exit 1; \
 	fi
 	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
-		--xml --xml-version=2 src/legacy/*.c src/*.c 2> build/cppcheck_report.xml || true
+		-I include --xml --xml-version=2 src/legacy/*.c src/*.c 2> build/cppcheck_report.xml || true
 	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
-		src/legacy/*.c src/*.c 2>&1 | tee build/cppcheck_report.txt || true
+		-I include src/legacy/*.c src/*.c 2>&1 | tee build/cppcheck_report.txt || true
 	@echo ""
 	@echo "cppcheck reports saved to:"
 	@echo "  - build/cppcheck_report.xml"

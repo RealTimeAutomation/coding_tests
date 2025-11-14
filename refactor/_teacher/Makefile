@@ -139,9 +139,9 @@ cppcheck-student:
 		exit 1; \
 	fi
 	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
-		--xml --xml-version=2 ../_student/src/legacy/*.c ../_student/src/*.c 2> cppcheck_student.xml || true
+		-I ../_student/include --xml --xml-version=2 ../_student/src/legacy/*.c ../_student/src/*.c 2> cppcheck_student.xml || true
 	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
-		../_student/src/legacy/*.c ../_student/src/*.c 2>&1 | tee cppcheck_student.txt || true
+		-I ../_student/include ../_student/src/legacy/*.c ../_student/src/*.c 2>&1 | tee cppcheck_student.txt || true
 	@echo "cppcheck reports: cppcheck_student.xml, cppcheck_student.txt"
 
 cppcheck-answer-key:
@@ -151,9 +151,9 @@ cppcheck-answer-key:
 		exit 1; \
 	fi
 	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
-		--xml --xml-version=2 answer_key/src/legacy/*.c answer_key/src/*.c 2> cppcheck_answer_key.xml || true
+		-I answer_key/include --xml --xml-version=2 answer_key/src/legacy/*.c answer_key/src/*.c 2> cppcheck_answer_key.xml || true
 	@cppcheck --enable=all --suppress=missingIncludeSystem --suppress=unusedFunction \
-		answer_key/src/legacy/*.c answer_key/src/*.c 2>&1 | tee cppcheck_answer_key.txt || true
+		-I answer_key/include answer_key/src/legacy/*.c answer_key/src/*.c 2>&1 | tee cppcheck_answer_key.txt || true
 	@echo "cppcheck reports: cppcheck_answer_key.xml, cppcheck_answer_key.txt"
 
 cppcheck: cppcheck-student cppcheck-answer-key
