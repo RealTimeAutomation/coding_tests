@@ -1,0 +1,78 @@
+# CMake configuration for testing student submissions
+# This builds student code from ../../_student/ but uses answer key's full test suites
+# Paths are relative to refactor/_teacher/answer_key/
+
+cmake_minimum_required(VERSION 3.10)
+project(student_test C)
+
+set(CMAKE_C_STANDARD 99)
+
+# Get student source directory (passed via -DSTUDENT_SOURCE_DIR)
+if(NOT DEFINED STUDENT_SOURCE_DIR)
+    message(FATAL_ERROR "STUDENT_SOURCE_DIR not defined. Use: cmake -DSTUDENT_SOURCE_DIR=/path/to/_student")
+endif()
+
+# Get answer key directory (passed via -DANSWER_KEY_DIR)
+if(NOT DEFINED ANSWER_KEY_DIR)
+    message(FATAL_ERROR "ANSWER_KEY_DIR not defined. Use: cmake -DANSWER_KEY_DIR=/path/to/answer_key")
+endif()
+
+# Student source files (from ../../_student/)
+set(STUDENT_SRC_DIR "${STUDENT_SOURCE_DIR}/src/legacy")
+set(STUDENT_LOGGER "${STUDENT_SOURCE_DIR}/src/logger.c")
+
+# Answer key test files (has both initial and final tests)
+set(ANSWER_KEY_TESTS_DIR "${ANSWER_KEY_DIR}/tests")
+set(ANSWER_KEY_INCLUDE_DIR "${ANSWER_KEY_DIR}/include")
+
+# Check if student files exist
+if(NOT EXISTS "${STUDENT_SRC_DIR}")
+    message(FATAL_ERROR "Student source directory not found: ${STUDENT_SRC_DIR}")
+    message(FATAL_ERROR "Expected structure: _student/src/legacy/*.c")
+endif()
+
+# Library built from student code
+add_library(studentlib
+    ${STUDENT_SRC_DIR}/metrics.c
+    ${STUDENT_SRC_DIR}/text.c
+    ${STUDENT_SRC_DIR}/config.c
+    ${STUDENT_SRC_DIR}/list.c
+    ${STUDENT_SRC_DIR}/string_utils.c
+    ${STUDENT_SRC_DIR}/protocol_apple.c
+    ${STUDENT_SRC_DIR}/protocol_banana.c
+    ${STUDENT_SRC_DIR}/protocol_carrot.c
+    ${STUDENT_LOGGER}
+)
+target_include_directories(studentlib PUBLIC ${ANSWER_KEY_INCLUDE_DIR})
+
+# Initial test executable using answer key tests but student code
+add_executable(run_tests
+    ${ANSWER_KEY_TESTS_DIR}/cunit.c
+    ${ANSWER_KEY_TESTS_DIR}/test_main.c
+    ${ANSWER_KEY_TESTS_DIR}/test_metrics.c
+    ${ANSWER_KEY_TESTS_DIR}/test_text.c
+    ${ANSWER_KEY_TESTS_DIR}/test_config.c
+    ${ANSWER_KEY_TESTS_DIR}/test_list.c
+    ${ANSWER_KEY_TESTS_DIR}/test_string_utils.c
+    ${ANSWER_KEY_TESTS_DIR}/test_protocol_apple.c
+    ${ANSWER_KEY_TESTS_DIR}/test_protocol_banana.c
+    ${ANSWER_KEY_TESTS_DIR}/test_protocol_carrot.c
+)
+target_include_directories(run_tests PRIVATE ${ANSWER_KEY_INCLUDE_DIR} ${ANSWER_KEY_TESTS_DIR})
+target_link_libraries(run_tests PRIVATE studentlib)
+
+# Final test executable (full test suite that catches bugs)
+add_executable(run_tests_final
+    ${ANSWER_KEY_TESTS_DIR}/cunit.c
+    ${ANSWER_KEY_TESTS_DIR}/test_main_final.c
+    ${ANSWER_KEY_TESTS_DIR}/test_metrics_final.c
+    ${ANSWER_KEY_TESTS_DIR}/test_text_final.c
+    ${ANSWER_KEY_TESTS_DIR}/test_config_final.c
+    ${ANSWER_KEY_TESTS_DIR}/test_list_final.c
+    ${ANSWER_KEY_TESTS_DIR}/test_string_utils_final.c
+    ${ANSWER_KEY_TESTS_DIR}/test_protocol_apple_final.c
+    ${ANSWER_KEY_TESTS_DIR}/test_protocol_banana_final.c
+    ${ANSWER_KEY_TESTS_DIR}/test_protocol_carrot_final.c
+)
+target_include_directories(run_tests_final PRIVATE ${ANSWER_KEY_INCLUDE_DIR} ${ANSWER_KEY_TESTS_DIR})
+target_link_libraries(run_tests_final PRIVATE studentlib)

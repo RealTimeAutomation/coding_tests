@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblegacylib.a CMakeFiles/legacylib.dir/src/legacy/metrics.c.o CMakeFiles/legacylib.dir/src/legacy/text.c.o CMakeFiles/legacylib.dir/src/legacy/config.c.o CMakeFiles/legacylib.dir/src/legacy/list.c.o CMakeFiles/legacylib.dir/src/legacy/string_utils.c.o CMakeFiles/legacylib.dir/src/legacy/protocol_apple.c.o CMakeFiles/legacylib.dir/src/legacy/protocol_banana.c.o CMakeFiles/legacylib.dir/src/legacy/protocol_carrot.c.o CMakeFiles/legacylib.dir/src/logger.c.o
+/usr/bin/ranlib liblegacylib.a

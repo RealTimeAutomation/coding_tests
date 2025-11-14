@@ -1,7 +1,0 @@
-build/
-*.o
-*.a
-*.exe
-tests_tmp.cfg
-*.log
-
