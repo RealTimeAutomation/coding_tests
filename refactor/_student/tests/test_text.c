@@ -77,3 +77,35 @@ CUNIT_TEST(test_replace_no_match) {
 
 // Intentionally skipping tests for CR vs LF, leading/trailing spaces, overlapping replacements, NULL pointers, memory leaks
 
+CUNIT_TEST(test_upper_null) {
+    char* up = text_to_upper(NULL);
+    CUNIT_ASSERT(!up);
+    free(up);
+}
+
+CUNIT_TEST(test_replace_NULL) {
+    char* r = text_replace_all(NULL, "_", "-");
+    CUNIT_ASSERT(!r);
+    free(r);
+}
+
+CUNIT_TEST(test_normalize_NULL) {
+    size_t n = text_normalize_whitespace(NULL);
+    CUNIT_ASSERT_EQ((int)n, -1);
+}
+
+CUNIT_TEST(test_normalize_trailing) {
+    char buf[64];
+    strcpy(buf, "hello world     ");
+    size_t n = text_normalize_whitespace(buf);
+    CUNIT_ASSERT_EQ((int)n, 11);
+    CUNIT_ASSERT_STR_EQ(buf, "hello world");
+}
+
+CUNIT_TEST(test_normalize_leading) {
+    char buf[64];
+    strcpy(buf, "    hello world");
+    size_t n = text_normalize_whitespace(buf);
+    CUNIT_ASSERT_EQ((int)n, 11);
+    CUNIT_ASSERT_STR_EQ(buf, "hello world");
+}

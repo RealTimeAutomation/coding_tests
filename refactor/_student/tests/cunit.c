@@ -23,11 +23,10 @@ int __cunit_test_capacity = 0;
 #ifndef _WIN32
 static sigjmp_buf __cunit_sig_env;
 static volatile int __cunit_in_test = 0;
-static volatile int __cunit_last_signal = 0;
 
-static void crash_handler(int sig) {
+static void segfault_handler(int sig) {
+    (void)sig;
     if (__cunit_in_test) {
-        __cunit_last_signal = sig;
         // Disable core dump before jumping (in case it wasn't set earlier)
         #ifndef _WIN32
         struct rlimit rl;
@@ -42,22 +41,21 @@ static void crash_handler(int sig) {
         siglongjmp(__cunit_sig_env, 1);
     } else {
         // Not in a test, let it crash normally
-        signal(sig, SIG_DFL);
-        raise(sig);
+        signal(SIGSEGV, SIG_DFL);
+        raise(SIGSEGV);
     }
 }
 #else
 static jmp_buf __cunit_sig_env;
 static volatile int __cunit_in_test = 0;
-static volatile int __cunit_last_signal = 0;
 
-static void crash_handler(int sig) {
+static void segfault_handler(int sig) {
+    (void)sig;
     if (__cunit_in_test) {
-        __cunit_last_signal = sig;
         longjmp(__cunit_sig_env, 1);
     } else {
-        signal(sig, SIG_DFL);
-        raise(sig);
+        signal(SIGSEGV, SIG_DFL);
+        raise(SIGSEGV);
     }
 }
 #endif
@@ -87,26 +85,24 @@ int cunit_run_all_tests_verbose(FILE* output_file) {
     #endif
     #endif
     
-    // Install signal handlers for SIGSEGV and SIGFPE (Unix/Linux/WSL)
+    // Install signal handler for SIGSEGV (Unix/Linux/WSL)
     #ifndef _WIN32
     struct sigaction sa;
-    sa.sa_handler = crash_handler;
+    sa.sa_handler = segfault_handler;
     sigemptyset(&sa.sa_mask);
     // SA_NODEFER allows handler to be called recursively if needed
+    // SA_ONSTACK is not needed but SA_RESTART might help
     sa.sa_flags = SA_NODEFER;
     sigaction(SIGSEGV, &sa, NULL);
-    sigaction(SIGFPE, &sa, NULL);
     
-    // Ensure signals are not blocked
+    // Ensure SIGSEGV is not blocked
     sigset_t block_set;
     sigemptyset(&block_set);
     sigaddset(&block_set, SIGSEGV);
-    sigaddset(&block_set, SIGFPE);
     sigprocmask(SIG_UNBLOCK, &block_set, NULL);
     #else
     // On Windows/WSL, signal handling should work
-    signal(SIGSEGV, crash_handler);
-    signal(SIGFPE, crash_handler);
+    signal(SIGSEGV, segfault_handler);
     #endif
     
     for (int i = 0; i < __cunit_test_count; ++i) {
@@ -119,7 +115,6 @@ int cunit_run_all_tests_verbose(FILE* output_file) {
         __cunit_fail_file = NULL;
         __cunit_fail_line = 0;
         __cunit_in_test = 1;
-        __cunit_last_signal = 0;
         
         #ifndef _WIN32
         if (sigsetjmp(__cunit_sig_env, 1) == 0) {
@@ -151,27 +146,17 @@ int cunit_run_all_tests_verbose(FILE* output_file) {
                 failed++;
             }
         } else {
-            // Crash occurred - siglongjmp returned here
+            // Segfault occurred - siglongjmp returned here
             __cunit_in_test = 0;
-            const char* crash_type = "Unknown";
-            const char* crash_desc = "Function crashed";
-            if (__cunit_last_signal == SIGSEGV) {
-                crash_type = "Segfault";
-                crash_desc = "SEGFAULT - Function crashed (likely NULL pointer dereference)";
-            } else if (__cunit_last_signal == SIGFPE) {
-                crash_type = "Floating Point Exception";
-                crash_desc = "FPE - Function crashed (likely division by zero)";
-            }
             fprintf(output_file, " ... [CRASH]\n");
-            fprintf(output_file, "| `%s` | 💥 CRASH (%s) |\n", __cunit_tests[i].name, crash_type);
+            fprintf(output_file, "| `%s` | 💥 CRASH (Segfault) |\n", __cunit_tests[i].name);
             fprintf(stderr, " ... [CRASH]\n");
-            fprintf(stderr, "  %s in test: %s\n", crash_type, __cunit_tests[i].name);
-            fprintf(output_file, "  - **Error**: %s\n", crash_desc);
+            fprintf(stderr, "  SEGFAULT in test: %s\n", __cunit_tests[i].name);
+            fprintf(output_file, "  - **Error**: SEGFAULT - Function crashed (likely NULL pointer dereference)\n");
             fflush(output_file);
             fflush(stderr);
             crashed++;
             failed++;
-            __cunit_last_signal = 0;  // Reset for next test
         }
     }
     

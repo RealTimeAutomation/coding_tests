@@ -32,7 +32,6 @@ static void test_generic_protocol(void) {
     buffer[written] = '\0';
     
     log_info("Serialized message (%d bytes): %s", written, buffer);
-    printf("Serialized message (%d bytes): %s\n", written, buffer);
     
     // Parse back
     gen_message parsed;
@@ -232,8 +231,7 @@ int main(int argc, char* argv[]) {
         printf("=====================\n\n");
     }
     
-    // test_generic_protocol();
-    // test_apple_protocol();
+    //! test_generic_protocol();
     
     test_all_protocols_interaction();
     

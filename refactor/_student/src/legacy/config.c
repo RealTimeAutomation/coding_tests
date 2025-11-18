@@ -5,14 +5,14 @@
 #include <string.h>
 
 static int parse_bool(const char* v, bool* out) {
-
-    // BUG fix this
+    
+    //TODO format this
     if (strcmp(v, "true") == 0) { *out = true; return 1; }
     else if (strcmp(v, "false") == 0) { *out = false; return 1; }
     else if (strcmp(v, "1") == 0) { *out = true; return 1; }
     else if (strcmp(v, "0") == 0) { *out = false; return 1; }
-    else if (strcmp(v, "TRUE") == 0) { *out = true; return 0; }
-    else if (strcmp(v, "FALSE") == 0) { *out = false; return 0; }
+    else if (strcmp(v, "TRUE") == 0) { *out = true; return 1; }
+    else if (strcmp(v, "FALSE") == 0) { *out = false; return 1; }
     else return 0;
 }
 
@@ -28,6 +28,8 @@ static void trim(char* s) {
 }
 
 bool config_parse_file(const char* path, app_config* out_cfg) {
+
+    if(!path || !out_cfg) return false;
 
     // TODO split this function
     FILE* f = fopen(path, "rb");

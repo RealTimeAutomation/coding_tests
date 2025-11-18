@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /**
  * @brief Is the current character white space
@@ -26,6 +27,7 @@ static int is_ws(char c) {
  * @param s String to normalize
  */
 size_t text_normalize_whitespace(char* s) {
+    if(!s){return -1;}
     size_t r = 0, w = 0;
     int in_ws = 1;
     while (s[r] != '\0') {
@@ -58,7 +60,10 @@ size_t text_normalize_whitespace(char* s) {
     return w;
 }
 
+// ? I would pass out parameter instead of malloc or return result by value
 char* text_to_upper(const char* s) {
+    if(!s){return NULL;}
+    printf("hit2\n");
     size_t n = strlen(s);
     char* out = (char*)malloc(n+1);
     if (!out) return NULL;
@@ -76,7 +81,7 @@ static char* str_replace_once(const char* s, const char* from, const char* to, s
     const char* p = strstr(s + start_idx, from);
     *did = 0;
     if (!p) return NULL;
-    *did = 1;
+    *did = 1; //TODO why is this being overwritten?
     size_t prefix = (size_t)(p - s);
     size_t from_len = strlen(from);
     size_t to_len = strlen(to);
@@ -90,6 +95,7 @@ static char* str_replace_once(const char* s, const char* from, const char* to, s
 }
 
 char* text_replace_all(const char* s, const char* from, const char* to) {
+    if(!s) {return NULL;}
     if (!from || !*from) return strdup(s);
     char* cur = strdup(s);
     if (!cur) return NULL;

@@ -57,3 +57,79 @@ CUNIT_TEST(test_parse_false) {
 
 // Intentionally skipping tests for: uppercase TRUE/FALSE, long lines (>255), invalid keys, host overflow, NULL pointers
 
+CUNIT_TEST(test_parse_TRUE) {
+    const char* path = "tests_tmp.cfg";
+    const char* data =
+        "# sample\n"
+        "host = example.com\n"
+        "port=8080\n"
+        "enable_tls=TRUE\n";
+    FILE* f = fopen(path, "wb");
+    fwrite(data, 1, strlen(data), f);
+    fclose(f);
+
+    app_config cfg;
+    bool ok = config_parse_file(path, &cfg);
+    remove(path);
+
+    CUNIT_ASSERT(ok);
+    CUNIT_ASSERT_EQ(cfg.port, 8080);
+    CUNIT_ASSERT(cfg.enable_tls == true);
+    CUNIT_ASSERT_STR_EQ(cfg.host, "example.com");
+}
+
+CUNIT_TEST(test_parse_FALSE) {
+    const char* path = "tests_tmp.cfg";
+    const char* data =
+        "# sample\n"
+        "host = example.com\n"
+        "port=8080\n"
+        "enable_tls=FALSE\n";
+    FILE* f = fopen(path, "wb");
+    fwrite(data, 1, strlen(data), f);
+    fclose(f);
+
+    app_config cfg;
+    bool ok = config_parse_file(path, &cfg);
+    remove(path);
+
+    CUNIT_ASSERT(ok);
+    CUNIT_ASSERT_EQ(cfg.port, 8080);
+    CUNIT_ASSERT(cfg.enable_tls == false);
+    CUNIT_ASSERT_STR_EQ(cfg.host, "example.com");
+}
+
+CUNIT_TEST(test_parse_null_path) {
+    // const char* path = "tests_tmp.cfg";
+    // const char* data =
+    //     "# sample\n"
+    //     "host = example.com\n"
+    //     "port=8080\n"
+    //     "enable_tls=true\n";
+    // FILE* f = fopen(path, "wb");
+    // fwrite(data, 1, strlen(data), f);
+    // fclose(f);
+
+    app_config cfg;
+    bool ok = config_parse_file(NULL, &cfg);
+    // remove(path);
+
+    CUNIT_ASSERT(!ok);
+}
+
+CUNIT_TEST(test_parse_null_cfg) {
+    const char* path = "tests_tmp.cfg";
+    const char* data =
+        "# sample\n"
+        "host = example.com\n"
+        "port=8080\n"
+        "enable_tls=true\n";
+    FILE* f = fopen(path, "wb");
+    fwrite(data, 1, strlen(data), f);
+    fclose(f);
+
+    bool ok = config_parse_file(path, NULL);
+    remove(path);
+
+    CUNIT_ASSERT(!ok);
+}

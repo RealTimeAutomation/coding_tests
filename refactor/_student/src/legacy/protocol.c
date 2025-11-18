@@ -3,16 +3,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// ! Test function
+// void print_buffer(const char* buffer, size_t buffer_len){
+//     for(int i = 0; i < buffer_len; i++)
+//     {
+//         printf("%d: %c ", i, buffer[i]);
+//     }
+//     printf("\n");
+// }
+
+// [x] Consolidated protocol files in to one file
+
 bool gen_parse(const char* buffer, size_t buffer_len, gen_message* out) {
 
-    if (buffer_len < 10) {
+    // [x] Fixed buffer length check to 77, added check for empty buffer, added check for NULL buffer
+    if (buffer == NULL || out == NULL || buffer_len < 77 || buffer[0] == '\0') {
         return false;
     }
 
     char version_str[5];
+    char* endptr;
     strncpy(version_str, buffer, sizeof(version_str)-1);
     version_str[4] = '\0';
-    out->version = (int)strtol(version_str, NULL, 16);
+    out->version = (int)strtol(version_str, &endptr, 16);
+    // [x] check for '\0' in any of first 4 slots 
+    for(int i = 0; i < 4; i++){
+        if(version_str[i] == '\0'){
+            // invalid version number
+            return false;
+        }
+    }
+    if (*endptr != '\0')
+    {
+        // Invalid version number
+        return false;
+    }
     
     buffer += 4;
 

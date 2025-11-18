@@ -30,6 +30,10 @@ static void conv_generic_carrot(const gen_message* src, carrot_message* dest){
 
 bool carrot_parse(const char* buffer, size_t buffer_len, carrot_message* out) {
 
+    // [x] added null pointer check
+    if(out == NULL){
+        return 0;
+    }
     gen_message gen_msg = {};
     bool ret = gen_parse(buffer, buffer_len, &gen_msg);
     conv_generic_carrot(&gen_msg, out);
@@ -38,6 +42,10 @@ bool carrot_parse(const char* buffer, size_t buffer_len, carrot_message* out) {
 
 int carrot_serialize(const carrot_message* msg, char* buffer, size_t buffer_size) {
 
+    // [x] added null pointer check
+    if(msg == NULL){
+        return -1;
+    }
     gen_message gen_msg = {};
     conv_carrot_generic(msg, &gen_msg);
     return gen_serialize(&gen_msg, buffer, buffer_size);
@@ -46,6 +54,10 @@ int carrot_serialize(const carrot_message* msg, char* buffer, size_t buffer_size
 
 bool carrot_validate(const carrot_message* msg) {
 
+    // [x] added null pointer check
+    if(msg == NULL){
+        return 0;
+    }
     gen_message gen_msg = {};
     conv_carrot_generic(msg, &gen_msg);
     return gen_validate(&gen_msg);
@@ -54,6 +66,10 @@ bool carrot_validate(const carrot_message* msg) {
 
 unsigned int carrot_checksum(const carrot_message* msg) {
 
+    // [x] added null pointer check
+    if(msg == NULL){
+        return 0;
+    }
     gen_message gen_msg = {};
     conv_carrot_generic(msg, &gen_msg);
     return gen_checksum(&gen_msg);

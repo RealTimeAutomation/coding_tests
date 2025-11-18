@@ -91,3 +91,161 @@ CUNIT_TEST(test_apple_checksum) {
 
 // Intentionally skipping tests for: NULL pointers, invalid buffer sizes, malformed input, edge cases, validation failures
 
+CUNIT_TEST(test_apple_parse_empty_version) {
+    
+    // Format: 4-char version hex, 64-char device_id, 8-char temp hex, 1-char active
+    char buffer[80] = "";
+    memset(buffer + 4, 0, 64);
+    strcpy(buffer + 4, "device123");
+    strcpy(buffer + 68, "00000014"); // temp = 20
+    buffer[76] = '1';
+    buffer[77] = '\0';
+    
+    apple_message msg;
+    bool ok = apple_parse(buffer, 77, &msg);
+    CUNIT_ASSERT(!ok);
+}
+
+CUNIT_TEST(test_apple_parse_invalid_version) {
+    
+    // Format: 4-char version hex, 64-char device_id, 8-char temp hex, 1-char active
+    char buffer[80] = "1BFG";
+    memset(buffer + 4, 0, 64);
+    strcpy(buffer + 4, "device123");
+    strcpy(buffer + 68, "00000014"); // temp = 20
+    buffer[76] = '1';
+    buffer[77] = '\0';
+    
+    apple_message msg;
+    bool ok = apple_parse(buffer, 77, &msg);
+    CUNIT_ASSERT(!ok);
+}
+
+CUNIT_TEST(test_apple_parse_invalid_version2) {
+    
+    // Format: 4-char version hex, 64-char device_id, 8-char temp hex, 1-char active
+    char buffer[80] = "Z234";
+    memset(buffer + 4, 0, 64);
+    strcpy(buffer + 4, "device123");
+    strcpy(buffer + 68, "00000014"); // temp = 20
+    buffer[76] = '1';
+    buffer[77] = '\0';
+    
+    apple_message msg;
+    bool ok = apple_parse(buffer, 77, &msg);
+    CUNIT_ASSERT(!ok);
+}
+
+
+CUNIT_TEST(test_apple_parse_invalid_version3) {
+    // Format: 4-char version hex, 64-char device_id, 8-char temp hex, 1-char active
+    char buffer[80] = "001";
+    memset(buffer + 4, 0, 64);
+    strcpy(buffer + 4, "device123");
+    strcpy(buffer + 68, "00000014"); // temp = 20
+    buffer[76] = '1';
+    buffer[77] = '\0';
+    
+    apple_message msg;
+    bool ok = apple_parse(buffer, 77, &msg);
+    CUNIT_ASSERT(!ok);
+}
+
+CUNIT_TEST(test_apple_parse_null_buffer) {
+    
+    // Format: 4-char version hex, 64-char device_id, 8-char temp hex, 1-char active
+    // char buffer[80] = "";
+    // memset(buffer + 4, 0, 64);
+    // strcpy(buffer + 4, "device123");
+    // strcpy(buffer + 68, "00000014"); // temp = 20
+    // buffer[76] = '1';
+    // buffer[77] = '\0';
+    
+    apple_message msg;
+    bool ok = apple_parse(NULL, 77, &msg);
+    CUNIT_ASSERT(!ok);
+}
+
+CUNIT_TEST(test_apple_parse_null_msg) {
+    
+    // Format: 4-char version hex, 64-char device_id, 8-char temp hex, 1-char active
+    char buffer[80] = "0001";
+    memset(buffer + 4, 0, 64);
+    strcpy(buffer + 4, "device123");
+    strcpy(buffer + 68, "00000014"); // temp = 20
+    buffer[76] = '1';
+    buffer[77] = '\0';
+    
+    bool ok = apple_parse(buffer, 77, NULL);
+    CUNIT_ASSERT(!ok);
+}
+
+//! Determine what an invalid format looks like
+// CUNIT_TEST(test_apple_parse_invalid_format) {
+//     // Format: 4-char version hex, 64-char device_id, 8-char temp hex, 1-char active
+//     char buffer[80] = "001A";
+//     memset(buffer + 4, 0, 64);
+//     strcpy(buffer + 4, "device123");
+//     strcpy(buffer + 68, "00000014"); // temp = 20
+//     buffer[76] = '1';
+//     buffer[77] = '\0';
+    
+//     apple_message msg;
+//     bool ok = apple_parse(buffer, 77, &msg);
+//     CUNIT_ASSERT(!ok);
+// }
+
+CUNIT_TEST(test_apple_serialize_null_msg) {
+    apple_message msg;
+    msg.version = 2;
+    strcpy(msg.device_id, "test_device");
+    msg.temperature = 25;
+    msg.active = false;
+    
+    char buffer[128];
+    int written = apple_serialize(NULL, buffer, sizeof(buffer));
+    CUNIT_ASSERT(written == -1);
+}
+
+CUNIT_TEST(test_apple_serialize_null_buffer) {
+    apple_message msg;
+    msg.version = 2;
+    strcpy(msg.device_id, "test_device");
+    msg.temperature = 25;
+    msg.active = false;
+    
+    char buffer[128];
+    int written = apple_serialize(&msg, NULL, sizeof(buffer));
+    CUNIT_ASSERT(written == -1);
+}
+
+//------------------------------------------------------------------------------------
+// CUNIT_TEST(test_apple_parse_basic) {
+//     // Format: 4-char version hex, 64-char device_id, 8-char temp hex, 1-char active
+//     char buffer[80] = "0001";
+//     memset(buffer + 4, 0, 64);
+//     strcpy(buffer + 4, "device123");
+//     strcpy(buffer + 68, "00000014"); // temp = 20
+//     buffer[76] = '1';
+//     buffer[77] = '\0';
+    
+//     apple_message msg;
+//     bool ok = apple_parse(buffer, 77, &msg);
+//     CUNIT_ASSERT(ok);
+//     CUNIT_ASSERT_EQ(msg.version, 1);
+//     CUNIT_ASSERT_STR_EQ(msg.device_id, "device123");
+//     CUNIT_ASSERT_EQ(msg.temperature, 20);
+//     CUNIT_ASSERT(msg.active == true);
+// }
+
+// CUNIT_TEST(test_apple_serialize_basic) {
+//     apple_message msg;
+//     msg.version = 2;
+//     strcpy(msg.device_id, "test_device");
+//     msg.temperature = 25;
+//     msg.active = false;
+    
+//     char buffer[128];
+//     int written = apple_serialize(&msg, buffer, sizeof(buffer));
+//     CUNIT_ASSERT(written > 0);
+// }
