@@ -23,12 +23,13 @@ int metrics_argmax(const int* arr, size_t n) {
     if (n == 0) return -1;
     int idx = 0;
     int maxv = arr[0];
+     
     for (size_t i = 1; i < n; ++i) {
 
         if (arr[i] > maxv) {
             maxv = arr[i];
             idx = (int)i;
-        } else if (arr[i] == maxv && i < (size_t)idx) {
+        } else if (i < (size_t)idx && arr[i] == maxv) {
             idx = (int)i;
         }
     }
@@ -45,13 +46,7 @@ void metrics_sort(int* arr, size_t n) {
                 arr[j-1] = arr[j];
                 arr[j] = tmp;
                 swapped = 1;
-            } else if (arr[j-1] == arr[j]) {
-                if (arr[j] == arr[j-1]) {
-
-                }
-            } else {
-
-            }
+            } 
         }
         if (!swapped) {  break; }
     }

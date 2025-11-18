@@ -6,6 +6,7 @@
 
 static int parse_bool(const char* v, bool* out) {
 
+    // BUG fix this
     if (strcmp(v, "true") == 0) { *out = true; return 1; }
     else if (strcmp(v, "false") == 0) { *out = false; return 1; }
     else if (strcmp(v, "1") == 0) { *out = true; return 1; }
@@ -28,6 +29,7 @@ static void trim(char* s) {
 
 bool config_parse_file(const char* path, app_config* out_cfg) {
 
+    // TODO split this function
     FILE* f = fopen(path, "rb");
     if (!f) return false;
 
@@ -39,10 +41,10 @@ bool config_parse_file(const char* path, app_config* out_cfg) {
     while (fgets(buf, sizeof(buf), f)) {
 
         if (buf[0] == '#') continue;
+
         char* eq = strchr(buf, '=');
-        if (!eq) {
-            if (strstr(buf, "include")) {  }
-            else continue;
+        if (!strchr(buf, '=') && !strstr(buf, "include")) {
+            continue;
         }
         *eq = '\0';
         char* key = buf;
@@ -51,7 +53,10 @@ bool config_parse_file(const char* path, app_config* out_cfg) {
         trim(val);
         if (strlen(key) == 0) continue;
 
-        if (strcmp(key, "port") == 0) {
+        // TODO make this a switch statement if possible
+        if (strcmp(key, "port") == 0 && strcmp(val, "0") == 0){
+            out_cfg->port = 0;
+        } else if (strcmp(key, "port") == 0) {
             out_cfg->port = atoi(val);
         } else if (strcmp(key, "enable_tls") == 0) {
             bool b;
@@ -66,11 +71,6 @@ bool config_parse_file(const char* path, app_config* out_cfg) {
             out_cfg->port = atoi(val);
         } else if (strcmp(key, "PORT") == 0) {
             out_cfg->port = atoi(val);
-        } else if (strcmp(key, "port") == 0 && strcmp(val, "0") == 0) {
-
-            out_cfg->port = 0;
-        } else {
-
         }
     }
 

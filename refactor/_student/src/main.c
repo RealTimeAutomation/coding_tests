@@ -1,10 +1,61 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "protocol.h"
 #include "protocol_apple.h"
 #include "protocol_banana.h"
 #include "protocol_carrot.h"
 #include "logger.h"
+
+static void test_generic_protocol(void) {
+    log_info("Testing Generic Protocol");
+
+    // Create a test message
+    gen_message msg = {
+        .version = 0x0001,
+        .device_id = "APPLE_DEVICE_001",
+        .temperature = 250,
+        .active = true
+    };
+
+    log_debug("Created message: version=0x%04X, device_id=%s, temp=%d, active=%d",
+              msg.version, msg.device_id, msg.temperature, msg.active);
+
+    // Serialize
+    char buffer[256];
+    int written = gen_serialize(&msg, buffer, sizeof(buffer));
+
+    if (written < 0) {
+        log_error("Failed to serialize message");
+        return;
+    }
+    buffer[written] = '\0';
+    
+    log_info("Serialized message (%d bytes): %s", written, buffer);
+    printf("Serialized message (%d bytes): %s\n", written, buffer);
+    
+    // Parse back
+    gen_message parsed;
+    if (gen_parse(buffer, written, &parsed)) {
+        log_info("Parsed message successfully");
+        log_debug("Parsed: version=0x%04X, device_id=%s, temp=%d, active=%d",
+                  parsed.version, parsed.device_id, parsed.temperature, parsed.active);
+        
+        // Validate
+        if (gen_validate(&parsed)) {
+            log_info("Message validation: PASSED");
+        } else {
+            log_warn("Message validation: FAILED");
+        }
+        
+        // Checksum
+        unsigned int checksum = gen_checksum(&parsed);
+        log_debug("Message checksum: 0x%08X", checksum);
+    } else {
+        log_error("Failed to parse message");
+    }
+    
+};
 
 static void test_apple_protocol(void) {
     log_info("Testing Apple Protocol");
@@ -23,6 +74,7 @@ static void test_apple_protocol(void) {
     // Serialize
     char buffer[256];
     int written = apple_serialize(&msg, buffer, sizeof(buffer));
+
     if (written < 0) {
         log_error("Failed to serialize apple message");
         return;
@@ -179,6 +231,9 @@ int main(int argc, char* argv[]) {
         printf("Protocol Demonstration\n");
         printf("=====================\n\n");
     }
+    
+    // test_generic_protocol();
+    // test_apple_protocol();
     
     test_all_protocols_interaction();
     

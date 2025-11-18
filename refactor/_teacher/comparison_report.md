@@ -1,14 +1,14 @@
 # Test Results Comparison Report
 
-Generated: Fri Nov 14 15:14:58 CST 2025
+Generated: Tue Nov 18 07:34:58 CST 2025
 
 ## Summary
 
 | Test Suite | Student | Answer Key | Difference |
 |------------|---------|------------|------------|
 | **Initial Tests** | 64/64 ✅ | 64/64 ✅ | 0 |
-| **Final Tests** | 4/96 ✅ | 96/96 ✅ | 92 |
-| **Total** | **68/160** | **160/160** | **92** |
+| **Final Tests** | 44/96 ✅ | 96/96 ✅ | 52 |
+| **Total** | **108/160** | **160/160** | **52** |
 
 ## Detailed Breakdown
 
@@ -32,10 +32,10 @@ Generated: Fri Nov 14 15:14:58 CST 2025
 
 **Student Results:**
 - Total: 96
-- Passed: 4 ✅
-- Failed: 0 ❌
-- Crashed:  💥
-- Success Rate: 4.2%
+- Passed: 44 ✅
+- Failed: 33 ❌
+- Crashed: 47 💥
+- Success Rate: 45.8%
 
 **Answer Key Results:**
 - Total: 96
@@ -47,14 +47,14 @@ Generated: Fri Nov 14 15:14:58 CST 2025
 ## Overall Assessment
 
 **Student Progress:**
-- Tests Fixed: 4 / 96 final tests
-- Completion: 4.2% of final tests passing
-- Remaining Issues: 92 tests still failing
+- Tests Fixed: 44 / 96 final tests
+- Completion: 45.8% of final tests passing
+- Remaining Issues: 52 tests still failing
 
 **Grade Estimation:**
 - Initial Tests: 100% (Expected: 100%)
-- Final Tests: 4% (Expected: 100%)
-- Overall: 42% (Expected: 100%)
+- Final Tests: 46% (Expected: 100%)
+- Overall: 68% (Expected: 100%)
 
 ## Notes
 

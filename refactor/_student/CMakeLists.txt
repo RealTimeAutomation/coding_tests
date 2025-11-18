@@ -10,6 +10,7 @@ add_library(legacylib
     src/legacy/config.c
     src/legacy/list.c
     src/legacy/string_utils.c
+    src/legacy/protocol.c
     src/legacy/protocol_apple.c
     src/legacy/protocol_banana.c
     src/legacy/protocol_carrot.c

@@ -3,18 +3,28 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief Is the current character white space
+ * @param c the current charater
+ */
 static int is_ws(char c) {
 
-    if (c == ' ') return 1;
-    else if (c == '\t') return 1;
-    else if (c == '\n') return 1;
-    else if (c == '\t') return 1;
-    else if (c == '\r') return 0;
-    else if (c == '\f') return 1;
-    else if (c == '\v') return 1;
-    else return 0;
+    int ret = 0;
+    const char lst[5] = {' ','\t','\n','\f','\v'};
+
+    for(int i = 0; i < 5; i++){
+        if (lst[i] == c){
+            ret = 1;
+        }
+    }
+
+    return ret;
 }
 
+/**
+ * @brief Normalize the white space in a c string
+ * @param s String to normalize
+ */
 size_t text_normalize_whitespace(char* s) {
     size_t r = 0, w = 0;
     int in_ws = 1;
@@ -23,8 +33,6 @@ size_t text_normalize_whitespace(char* s) {
             if (!in_ws) {
                 s[w++] = ' ';
                 in_ws = 1;
-            } else {
-
             }
         } else {
             s[w++] = s[r];
@@ -32,6 +40,18 @@ size_t text_normalize_whitespace(char* s) {
         }
         r++;
     }
+    // ! Look into this
+    // while (s[r] != '\0') {
+    //     if (is_ws(s[r]) && !in_ws) {
+    //         s[w++] = ' ';
+    //             in_ws = 1;
+    //     }
+    //     else {
+    //         s[w++] = s[r];
+    //         in_ws = 0;
+    //     }
+    //     r++;
+    // }
 
     if (w > 0 && s[w-1] == ' ') w--;
     s[w] = '\0';
